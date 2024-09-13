@@ -70,9 +70,14 @@ namespace CodeBase.Grid {
         // Метод для размещения предмета в ячейке
 
         public void PlaceItemInCell(int y, int x, GameObject item) {
-            if (IsCellEmpty(y, x)) {
-                grid[y, x].PlaceItem(item);
+            if (!IsCellEmpty(y, x)) {
+                Debug.LogWarning("Attempted to place item in a non-empty cell: " + y + ", " + x);
+                return; // Если ячейка не пуста, просто выходим из метода
             }
+
+            // Размещаем предмет
+            grid[y, x].PlaceItem(item);
+
 
             for (int i = 0; i < rows; i++) {
                 for (int e = 0; e < cols; e++) {
@@ -84,7 +89,9 @@ namespace CodeBase.Grid {
         // Метод для удаления предмета из ячейки
 
         public void RemoveItemFromCell(int y, int x) {
-            if (!IsCellEmpty(y, x)) {
+            if (y >= 0 && y < rows && x >= 0 && x < cols)
+            {
+                // Удаляем элемент из ячейки, не проверяя её заполненность
                 grid[y, x].RemoveItem();
             }
         }
