@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5180163009748215663}
   - component: {fileID: 7864001308599644813}
   m_Layer: 0
-  m_Name: ItemGrid
+  m_Name: 1BlockGreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c6a7fe2d4bb257e49bfd8e029a06b0c4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

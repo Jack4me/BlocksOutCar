@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CodeBase.Grid {
     public class GridManager : MonoBehaviour {
-        public int rows = 4; // Количество строк в сетке
+        public int rows = 5; // Количество строк в сетке
         public int cols = 4; // Количество столбцов в сетке
         public float cellSize = 1f; // Размер одной ячейки
         public GameObject gridItemPrefab; // Префаб предмета
@@ -13,8 +13,7 @@ namespace CodeBase.Grid {
             InitializeGrid(); // Инициализация сетки
 
             // Пример размещения предметов на сетке
-            CreateItemOnGrid(1, 1); // Размещаем предмет в ячейке (1, 1)
-            CreateItemOnGrid(2, 3); // Размещаем предмет в ячейке (2, 3)
+           
             Debug.Log("Cell " + 2 + ", " + 3 + " is now: " + grid[2, 3].isEmpty);
         }
 
