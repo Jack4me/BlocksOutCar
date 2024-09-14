@@ -5,6 +5,7 @@ namespace CodeBase.Grid {
         private Vector3 offset; // Смещение для корректного захвата предмета
         private bool isDragging = false;
         private GridManager gridManager;
+        private Vector2Int originalGridPosition; // Изначальная позиция в сетке
 
         void Start() {
             gridManager = FindObjectOfType<GridManager>();
@@ -13,12 +14,15 @@ namespace CodeBase.Grid {
         void OnMouseDown() {
             isDragging = true;
             offset = transform.position - GetMouseWorldPosition();
+
+            // Запоминаем начальную позицию в сетке
+            
+            originalGridPosition = gridManager.WorldToGridPosition(transform.position);
         }
 
         void OnMouseDrag() {
             if (isDragging) {
-                Vector2Int oldGridPosition = gridManager.WorldToGridPosition(transform.position);
-                gridManager.RemoveItemFromCell(oldGridPosition.x, oldGridPosition.y);
+                // Перемещаем объект вместе с мышкой
                 transform.position = GetMouseWorldPosition() + offset;
             }
         }
@@ -26,26 +30,27 @@ namespace CodeBase.Grid {
         void OnMouseUp() {
             isDragging = false;
 
-            // Конвертируем позицию в координаты сетки
-            Vector2Int gridPosition = gridManager.WorldToGridPosition(transform.position);
+            // Конвертируем текущую позицию в координаты сетки
+            Vector2Int newGridPosition = gridManager.WorldToGridPosition(transform.position);
 
             // Проверяем, свободна ли ячейка
-            if (gridManager.IsCellEmpty(gridPosition.x, gridPosition.y)) {
+            if (gridManager.IsCellEmpty(newGridPosition.x, newGridPosition.y)) {
                 // Обновляем позицию предмета и сетки
-                Vector3 snappedPosition = gridManager.GridToWorldPosition(gridPosition.x, gridPosition.y);
+                Vector3 snappedPosition = gridManager.GridToWorldPosition(newGridPosition.x, newGridPosition.y);
                 transform.position = snappedPosition;
 
-                // Размещаем объект в ячейке
-                gridManager.PlaceItemInCell(gridPosition.x, gridPosition.y, gameObject);
+                // Перемещаем объект из старой ячейки в новую
+                gridManager.RemoveItemFromCell(originalGridPosition.x, originalGridPosition.y);
+                gridManager.PlaceItemInCell(newGridPosition.x, newGridPosition.y, gameObject);
             }
             else {
                 // Если ячейка занята, возвращаем предмет на прежнюю позицию
-                Vector3 originalPosition =
-                    gridManager.GridToWorldPosition(1, 1); // Здесь можно использовать сохранённую позицию
+                Vector3 originalPosition = gridManager.GridToWorldPosition(originalGridPosition.x, originalGridPosition.y);
                 transform.position = originalPosition;
             }
         }
 
+        // Получаем позицию мыши в мировых координатах
         private Vector3 GetMouseWorldPosition() {
             Vector3 mousePoint = Input.mousePosition;
             mousePoint.z = Camera.main.WorldToScreenPoint(transform.position).z;
